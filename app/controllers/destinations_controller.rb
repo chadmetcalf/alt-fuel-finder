@@ -8,4 +8,9 @@ class DestinationsController < ApplicationController
       marker.json({title: destination.title})
     end
   end
+
+  def fuel_stations
+    NrelService.new.find_fuel_stations
+    redirect_to destinations_path
+  end
 end

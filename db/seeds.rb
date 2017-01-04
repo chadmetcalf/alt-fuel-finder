@@ -8,3 +8,4 @@
 
 Destination.create!(address: "Denver CO", description: "great city", title: "Mile High")
 Destination.create!(address: "Colorado Srpings CO", description: "awesome city", title: "springs")
+Destination.create!(address: "Fort Collins CO", description: "northern city", title: "FortC")
