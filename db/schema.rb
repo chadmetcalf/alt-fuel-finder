@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170105052538) do
+ActiveRecord::Schema.define(version: 20170105080200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,10 +21,10 @@ ActiveRecord::Schema.define(version: 20170105052538) do
     t.string   "address"
     t.string   "title"
     t.string   "description"
-    t.integer  "itinerary_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["itinerary_id"], name: "index_fuel_stations_on_itinerary_id", using: :btree
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_fuel_stations_on_user_id", using: :btree
   end
 
   create_table "itineraries", force: :cascade do |t|
@@ -40,10 +40,10 @@ ActiveRecord::Schema.define(version: 20170105052538) do
     t.string   "address"
     t.string   "title"
     t.string   "description"
-    t.integer  "itinerary_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["itinerary_id"], name: "index_places_on_itinerary_id", using: :btree
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_places_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 20170105052538) do
     t.datetime "updated_at",      null: false
   end
 
-  add_foreign_key "fuel_stations", "itineraries"
+  add_foreign_key "fuel_stations", "users"
   add_foreign_key "itineraries", "users"
-  add_foreign_key "places", "itineraries"
+  add_foreign_key "places", "users"
 end

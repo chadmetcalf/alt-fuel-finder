@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  resources :users
-  root "destinations#index"
-  get 'destinations/index', as: :destinations
+  # resources :users, only:[:show]
+  root "home#index"
 
-  get 'fuel_stations/', to: 'destinations#fuel_stations'
+  get "users/:id", to: "dashboard#show", as: :dashboard
 end
