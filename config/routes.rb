@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :users
   root "destinations#index"
   get 'destinations/index', as: :destinations
 

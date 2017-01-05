@@ -4,7 +4,6 @@ class DestinationsController < ApplicationController
   end
 
   def fuel_stations
-    binding.pry
     NrelService.new.find_fuel_stations
     redirect_to destinations_path
   end

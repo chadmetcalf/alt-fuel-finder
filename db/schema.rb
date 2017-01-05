@@ -10,19 +10,54 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170104022042) do
+ActiveRecord::Schema.define(version: 20170105052538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "destinations", force: :cascade do |t|
-    t.float    "latitude"
-    t.float    "longitude"
-    t.string   "description"
-    t.string   "title"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+  create_table "fuel_stations", force: :cascade do |t|
+    t.string   "latitude"
+    t.string   "longitude"
     t.string   "address"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "itinerary_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["itinerary_id"], name: "index_fuel_stations_on_itinerary_id", using: :btree
   end
 
+  create_table "itineraries", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_itineraries_on_user_id", using: :btree
+  end
+
+  create_table "places", force: :cascade do |t|
+    t.string   "latitude"
+    t.string   "longitude"
+    t.string   "address"
+    t.string   "title"
+    t.string   "description"
+    t.integer  "itinerary_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["itinerary_id"], name: "index_places_on_itinerary_id", using: :btree
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name"
+    t.string   "username"
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "uid"
+    t.string   "token"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_foreign_key "fuel_stations", "itineraries"
+  add_foreign_key "itineraries", "users"
+  add_foreign_key "places", "itineraries"
 end
