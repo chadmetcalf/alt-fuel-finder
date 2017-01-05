@@ -6,6 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Destination.create!(address: "Denver CO", description: "great city", title: "Mile High")
-Destination.create!(address: "Colorado Srpings CO", description: "awesome city", title: "springs")
-Destination.create!(address: "Fort Collins CO", description: "northern city", title: "FortC")
+Destination.create!(address: "Denver, CO", description: "great city", title: "Mile High")
+Destination.create!(address: "Albuqurque, NM", description: "nice city", title: "springs")
+Destination.create!(address: "Kansas City, MO", description: "northern city", title: "FortC")
