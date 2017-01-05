@@ -27,6 +27,7 @@
   <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br>
   <select multiple id="waypoints">
     <% @user.fuel_stations.each do |station| %>
+
       <option value=<%=station.address%>><%=station.address%></option>
 
     <% end %>

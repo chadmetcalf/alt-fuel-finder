@@ -8,11 +8,12 @@ class NrelService
   def find_fuel_stations(user)
     destination_1 = user.places.first.longitude.to_s + " " + user.places.first.latitude.to_s
     destination_2 = user.places.last.longitude.to_s + " " + user.places.last.latitude.to_s
-    fuel_type = "BD"
+    fuel_type = "E85"
     response = conn.get("nearby-route.json?api_key=#{ENV['nrel_key']}&route=LINESTRING(#{destination_1}, #{destination_2})&fuel_type=#{fuel_type}")
-    parsed = JSON.parse(response.body)
-    parsed.map do |station|
-      user.fuel_stations.create!(title: station["station_name"], address: station["zip"])
+    parsed = JSON.parse(response.body, symbolize_names: true)
+
+    parsed[:fuel_stations].map do |station|
+      user.fuel_stations.create!(title: station[:station_name], address: station[:zip])
     end
   end
 

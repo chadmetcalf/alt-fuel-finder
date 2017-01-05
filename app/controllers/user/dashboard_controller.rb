@@ -5,7 +5,8 @@ class User::DashboardController < ApplicationController
   end
 
   def fuel_stations
-    binding.pry
+    @user = User.find(params[:id])
+
     NrelService.new.find_fuel_stations(@user)
     redirect_to user_dashboard_path(@user)
   end
