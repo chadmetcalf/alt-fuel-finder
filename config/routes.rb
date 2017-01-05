@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   namespace :user do
     get "users/:id", to: "dashboard#show", as: :dashboard
+    get 'fuel_stations/:id', to: "dashboard#fuel_stations", as: :fuel_stations
     resources :places, only: [:new, :create]
   end
 end

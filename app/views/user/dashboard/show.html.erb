@@ -5,28 +5,35 @@
 
 <b>Start:</b>
 <select id="start">
-  <% @user.places.each do |place| %>
-    <option value=<%=place.address%>><%=place.address%></option>
-  <% end %>
+  <%# @user.places.each do |place| %>
+    <option value=<%=@user.places.first.address%>><%=@user.places.first.address%></option>
+  <%# end %>
 </select>
 <br>
 
 <b>End:</b>
 <select id="end">
-  <% @user.places.each do |place| %>
-    <option value=<%=place.address%>><%=place.address%></option>
-  <% end %>
+  <%# @user.places.each do |place| %>
+    <option value=<%=@user.places.last.address%>><%=@user.places.last.address%></option>
+  <%# end %>
 </select>
 
 <h4><%= link_to "Or Create a New Place", new_user_place_path  %></h4>
 
-<h3><%= link_to "Fetch Fuel Stations" %></h3>
+<h3><%= link_to "Fetch Fuel Stations", user_fuel_stations_path(@user) %></h3>
 
-<b>Waypoints:</b> <br>
-<i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br>
-<select multiple id="waypoints">
-</select>
-<br>
+<% if @user.fuel_stations %>
+  <b>Waypoints:</b> <br>
+  <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br>
+  <select multiple id="waypoints">
+    <% @user.fuel_stations.each do |station| %>
+      <option value=<%=station.address%>><%=station.address%></option>
+
+    <% end %>
+  </select>
+  <br>
+<% end %>
+
 <br>
   <input type="submit" id="submit">
 </div>
