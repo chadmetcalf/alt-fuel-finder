@@ -1,145 +1,65 @@
-<div id="info"></div>
-<div id="floating-panel">
-  <b>Start: </b>
-  <!-- via via US-36 E and I-55 N -->
-  <input id="start" value="Kansas City, MO" />
-  <br><b>End: </b>
-  <input id="end" value="Chicago IL" />
-  <br>
-  <input id="btn" value="calculate" type="button" />
-</div>
-<div id="map"></div>
-<div id="dirPanel"></div>
 
-<script src="epoly.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-
-var polyline;
-
-function initMap() {
-  var directionsService = new google.maps.DirectionsService;
-  var directionsDisplay = new google.maps.DirectionsRenderer;
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 7,
-    center: {
-      lat: 41.85,
-      lng: -87.65
-    }
-  });
-  directionsDisplay.setMap(map);
-  polyline = new google.maps.Polyline({
-    path: [],
-    strokeColor: '#0000FF',
-    strokeWeight: 3,
-    map: map
-  });
-
-  var onChangeHandler = function() {
-    calculateAndDisplayRoute(directionsService, directionsDisplay, map);
-  };
-  document.getElementById('btn').addEventListener('click', onChangeHandler);
-  calculateAndDisplayRoute(directionsService, directionsDisplay, map);
-}
-google.maps.event.addDomListener(window, 'load', initMap);
-
-function calculateAndDisplayRoute(directionsService, directionsDisplay, map) {
-  directionsService.route({
-    origin: document.getElementById('start').value,
-    destination: document.getElementById('end').value,
-    travelMode: 'DRIVING'
-  }, function(response, status) {
-    if (status === 'OK') {
-      // directionsDisplay.setDirections(response);
-      renderDirections(response, map);
-      var duration = 0; // seconds
-      var distance = 0; // meters
-      for (var i = 0; i < response.routes[0].legs.length; i++) {
-        duration += response.routes[0].legs[i].duration.value;
-        distance += response.routes[0].legs[i].distance.value;
-      }
-      document.getElementById('info').innerHTML = "total distance=" + (distance / 1000).toFixed(2) + " km<br>total duration=" + (duration / 60 / 60).toFixed(2) + " hours";
-      var points = polyline.GetPointsAtDistance(distance / (duration / 60 / 60));
-      // verify the result
-      var request = {
-        waypoints: [],
-        travelMode: 'DRIVING'
-      };
-      for (var i = 0; i < points.length; i++) {
-        var marker = new google.maps.Marker({
-          map: map,
-          position: points[i],
-          title: "" + i
-        });
-        if (i == 0) {
-          request.origin = marker.getPosition();
-        } else if ((i > 0) && (i < (points.length - 1))) {
-          request.waypoints.push({location: marker.getPosition(), stopover: true});
-        } else {
-          request.destination = marker.getPosition();
-        }
-      }
-      directionsService.route(request, function(response, status) {
-        if (status === 'OK') {
-          directionsDisplay.setDirections(response);
-          directionsDisplay.setPanel(document.getElementById('dirPanel'));
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-    }
-  });
-}
-
-function renderDirections(response, map) {
-  // directionsDisplay.setDirections(response);
-  var bounds = new google.maps.LatLngBounds();
-
-  var legs = response.routes[0].legs;
-  for (i = 0; i < legs.length; i++) {
-    var steps = legs[i].steps;
-    for (j = 0; j < steps.length; j++) {
-      var nextSegment = steps[j].path;
-      for (k = 0; k < nextSegment.length; k++) {
-        polyline.getPath().push(nextSegment[k]);
-        bounds.extend(nextSegment[k]);
-      }
-    }
-  }
-  // polyline.setMap(map);
-}
 /*********************************************************************\
 *                                                                     *
 * epolys.js                                          by Mike Williams *
-* updated to API v3                                  by Larry Ross    *
 *                                                                     *
 * A Google Maps API Extension                                         *
 *                                                                     *
-* Adds various Methods to google.maps.Polygon and google.maps.Polyline *
-*/
-// === A method which returns an array of GLatLngs of points a given interval along the path ===
-google.maps.Polyline.prototype.GetPointsAtDistance = function(metres) {
-  var next = metres;
-  var points = [];
-  // some awkward special cases
-  if (metres <= 0) return points;
-  var dist = 0;
-  var olddist = 0;
-  for (var i = 1;
-    (i < this.getPath().getLength()); i++) {
-    olddist = dist;
-    dist += google.maps.geometry.spherical.computeDistanceBetween(this.getPath().getAt(i), this.getPath().getAt(i - 1));
-    while (dist > next) {
-      var p1 = this.getPath().getAt(i - 1);
-      var p2 = this.getPath().getAt(i);
-      var m = (next - olddist) / (dist - olddist);
-      points.push(new google.maps.LatLng(p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m));
-      next += metres;
-    }
-  }
-  return points;
-}
+* Adds various Methods to GPolygon and GPolyline                      *
+*                                                                     *
+* .Contains(latlng) returns true is the poly contains the specified   *
+*                   GLatLng                                           *
+*                                                                     *
+* .Area()           returns the approximate area of a poly that is    *
+*                   not self-intersecting                             *
+*                                                                     *
+* .Distance()       returns the length of the poly path               *
+*                                                                     *
+* .Bounds()         returns a GLatLngBounds that bounds the poly      *
+*                                                                     *
+* .GetPointAtDistance() returns a GLatLng at the specified distance   *
+*                   along the path.                                   *
+*                   The distance is specified in metres               *
+*                   Reurns null if the path is shorter than that      *
+*                                                                     *
+* .GetPointsAtDistance() returns an array of GLatLngs at the          *
+*                   specified interval along the path.                *
+*                   The distance is specified in metres               *
+*                                                                     *
+* .GetIndexAtDistance() returns the vertex number at the specified    *
+*                   distance along the path.                          *
+*                   The distance is specified in metres               *
+*                   Reurns null if the path is shorter than that      *
+*                                                                     *
+* .Bearing(v1?,v2?) returns the bearing between two vertices          *
+*                   if v1 is null, returns bearing from first to last *
+*                   if v2 is null, returns bearing from v1 to next    *
+*                                                                     *
+*                                                                     *
+***********************************************************************
+*                                                                     *
+*   This Javascript is provided by Mike Williams                      *
+*   Community Church Javascript Team                                  *
+*   http://www.bisphamchurch.org.uk/                                  *
+*   http://econym.org.uk/gmap/                                        *
+*                                                                     *
+*   This work is licenced under a Creative Commons Licence            *
+*   http://creativecommons.org/licenses/by/2.0/uk/                    *
+*                                                                     *
+***********************************************************************
+*                                                                     *
+* Version 1.1       6-Jun-2007                                        *
+* Version 1.2       1-Jul-2007 - fix: Bounds was omitting vertex zero *
+*                                add: Bearing                         *
+* Version 1.3       28-Nov-2008  add: GetPointsAtDistance()           *
+* Version 1.4       12-Jan-2009  fix: GetPointsAtDistance()           *
+*                                                                     *
+\*********************************************************************/
 
+
+// === A method for testing if a point is inside a polygon
+// === Returns true if poly contains point
+// === Algorithm shamelessly stolen from http://alienryderflex.com/polygon/
 GPolygon.prototype.Contains = function(point) {
   var j=0;
   var oddNodes = false;
@@ -297,9 +217,3 @@ GPolyline.prototype.GetPointAtDistance   = GPolygon.prototype.GetPointAtDistance
 GPolyline.prototype.GetPointsAtDistance  = GPolygon.prototype.GetPointsAtDistance;
 GPolyline.prototype.GetIndexAtDistance   = GPolygon.prototype.GetIndexAtDistance;
 GPolyline.prototype.Bearing              = GPolygon.prototype.Bearing;
-
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApxQQXTCbYPGHpXHiiu7WXVS-u34n6JEA&callback=initMap">
-
-</script>

@@ -26,14 +26,14 @@
 
 <br>
   <input type="submit" id="submit">
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     document.getElementById("submit").addEventListener("click", displayMessage);
 
     function displayMessage() {
-      console.log("I HATE JS!!!");
+      alert("I HATE JS!!!");
     }
 
-  </script>
+  </script> -->
 </div>
 <div id="directions-panel"></div>
 </div>
@@ -64,42 +64,7 @@
       }
     }
 
-  function gMilestone(route,dist,opts) {
 
-    var markers=[],
-        geo=google.maps.geometry.spherical,
-        path=route.overview_path,
-        point=path[0],
-        distance=0,
-        leg,
-        overflow,
-        pos;
-
-    for(var p=1;p<path.length;++p) {
-      leg=Math.round(geo.computeDistanceBetween(point,path[p]));
-      d1=distance+0
-      distance+=leg;
-      overflow=dist-(d1%dist);
-
-      if(distance>=dist && leg>=overflow) {
-        if(overflow && leg>=overflow) {
-          pos=geo.computeOffset(point,overflow,geo.computeHeading(point,path[p]));
-          opts.position=pos;
-          markers.push(new google.maps.Marker(opts));
-          distance-=dist;
-        }
-
-        while(distance>=dist) {
-          pos=geo.computeOffset(point,dist+overflow,geo.computeHeading(point,path[p]));
-          opts.position=pos;
-          markers.push(new google.maps.Marker(opts));
-          distance-=dist;
-        }
-      }
-      point=path[p]
-    }
-  return markers;
-}
     directionsService.route({
       origin: document.getElementById('start').value,
       destination: document.getElementById('end').value,
@@ -125,6 +90,204 @@
         window.alert('Directions request failed due to ' + status);
       }
     });
+  }
+
+
+  var directions={};
+
+
+  function ginit()
+  {
+    var opts = {
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      center: new google.maps.LatLng(52.524268, 13.406290000000013)
+    }
+
+    map = new google.maps.Map(document.getElementById("map_canvas"), opts);
+
+
+    var routes=[
+                { label:'Erkner',
+                  request:{
+                    origin: new google.maps.LatLng(52.524268, 13.406290000000013),
+                    destination: new google.maps.LatLng(52.4244119, 13.749783200000024),
+                    travelMode: google.maps.DirectionsTravelMode.DRIVING},
+                  rendering:{marker:{icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'},draggable:true}
+                },
+                { label:'Potsdam',
+                  request:{
+                    origin: new google.maps.LatLng(52.524268, 13.406290000000013),
+                    destination: new google.maps.LatLng(52.3941887, 13.072690999999963),
+                    travelMode: google.maps.DirectionsTravelMode.DRIVING},
+                  rendering:{marker:{icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png'},draggable:true}
+                }
+               ];
+    var bounds=new google.maps.LatLngBounds();
+
+    var dists=[5000,3000,1000];
+    var selects=document.createElement('select');
+    list=document.getElementsByTagName('ul')[0];
+    for(var d=0;d<dists.length;++d)
+    {
+      selects.options[selects.options.length]=new Option(dists[d],dists[d],d==0,d==0);
+    }
+
+    for(var r=0;r<routes.length;++r)
+    {
+      bounds.extend(routes[r].request.destination);
+      routes[r].rendering.routeId='r'+r+new Date().getTime();
+      routes[r].rendering.dist=dists[0];
+      var select=selects.cloneNode(true);
+          select.setAttribute('name',routes[r].rendering.routeId);
+          select.onchange=function(){directions[this.name].renderer.dist=this.value;setMarkers(this.name)};
+      list.appendChild(document.createElement('li'));
+      list.lastChild.appendChild(select);
+      list.lastChild.appendChild(document.createTextNode(routes[r].label));
+
+      requestRoute(routes[r],map);
+    }
+    map.fitBounds(bounds);
+  }
+
+
+  function setMarkers(ID)
+  {
+    // ID = routeId
+    // 2
+    var direction=directions[ID],
+        // object that contains Re object which has routeId in 'renderer'
+        renderer=direction.renderer,
+        dist=renderer.dist,
+        // stored distance retrieved from front end distance option (5000, etc.)
+        marker=renderer.marker,
+        // http://labs.google.com/ridefinder/images/mm_20_blue.png
+        map=renderer.getMap(),
+        // the above literally returns the map
+        dirs=direction.renderer.getDirections();
+        marker.map=map;
+
+    // for(var k in direction.sets)
+    // {
+      // debugger;
+      //  var set=directions[ID].sets[k];
+      //      set.visible=!!(k===dist);
+      //  for(var m=0;m<set.length;++m)
+      //  {
+
+    //       set[m].setMap((set.visible)?map:null);
+    //    }
+    // }
+    if(!direction.sets[dist])
+    {
+      if(dirs.routes.length)
+      {
+        // dirs.routes is the whole map with directions from starting to end point
+        var route=dirs.routes[0];
+        var az=0;
+        for(var i=0;i<route.legs.length;++i)
+        {
+          if(route.legs[i].distance)
+          {
+            az+=route.legs[i].distance.value;
+                // distance given for route in object
+          }
+
+        }
+       dist=Math.max(dist,Math.round(az/100));
+       // setting min distance
+       // change to Math.min to set max?
+       direction.sets[dist]=gMilestone(route,dist,marker);
+       debugger;
+
+      }
+    }
+  }
+
+  function requestRoute(route,map)
+  {
+    if(!window.gDirSVC)
+    {
+      window.gDirSVC = new google.maps.DirectionsService();
+    }
+
+    var renderer=new google.maps.DirectionsRenderer(route.rendering);
+     var renderer=new google.maps.DirectionsRenderer(route.rendering);
+        renderer.setMap(map);
+        renderer.setOptions({preserveViewport:true})
+
+
+    google.maps.event.addListener(renderer, 'directions_changed', function() {
+          if(directions[this.routeId])
+          {
+           //remove markers
+            for(var k in directions[this.routeId].sets)
+            {
+                for(var m=0;m<directions[this.routeId].sets[k].length;++m)
+                // iterates through all markers
+                {
+                  directions[this.routeId].sets[k][m].setMap(null);
+                  // gets rid of marker
+                }
+            }
+          }
+
+          directions[this.routeId]={renderer:this,sets:{}};
+          setMarkers(this.routeId);
+
+    });
+
+    window.gDirSVC.route(route.request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        renderer.setDirections(response);
+    }
+    });
+  }
+
+
+
+  function gMilestone(route,dist,opts)
+  {
+    //
+    var markers=[],
+        geo=google.maps.geometry.spherical,
+        path=route.overview_path,
+        // blue line on map
+        point=path[0],
+        distance=0,
+        leg,
+        overflow,
+        pos;
+
+      for(var p=1;p<path.length;++p)
+      {
+        leg=Math.round(geo.computeDistanceBetween(point,path[p]));
+        d1=distance+0
+        distance+=leg;
+        overflow=dist-(d1%dist);
+
+        if(distance>=dist && leg>=overflow)
+        {
+          if(overflow && leg>=overflow)
+          {
+            pos=geo.computeOffset(point,overflow,geo.computeHeading(point,path[p]));
+            // calculates position
+            opts.position=pos;
+            markers.push(new google.maps.Marker(opts));
+            distance-=dist;
+          }
+
+          while(distance>=dist)
+          {
+            pos=geo.computeOffset(point,dist+overflow,geo.computeHeading(point,path[p]));
+            opts.position=pos;
+            markers.push(new google.maps.Marker(opts));
+            distance-=dist;
+          }
+        }
+        point=path[p]
+      }
+    return markers;
   }
 </script>
 <script async defer
