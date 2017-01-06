@@ -1,22 +1,11 @@
 <div id="map"></div>
 <div id="right-panel"><div>
 
-<h4>Please select places from the dropdown:</h4>
-
-<b>Start:</b>
-<select id="start">
-  <%# @user.places.each do |place| %>
-    <option value=<%=@user.places.first.address%>><%=@user.places.first.address%></option>
-  <%# end %>
-</select>
+<b>Start:</b></br>
+<input id="start" type="text" placeholder="Denver, CO" />
 <br>
-
-<b>End:</b>
-<select id="end">
-  <%# @user.places.each do |place| %>
-    <option value=<%=@user.places.last.address%>><%=@user.places.last.address%></option>
-  <%# end %>
-</select>
+<b>End:</b></br>
+<input id="end" type="text" placeholder="Albuquerque, NM" />
 
 <h4><%= link_to "Or Create a New Place", new_user_place_path  %></h4>
 
@@ -37,6 +26,14 @@
 
 <br>
   <input type="submit" id="submit">
+  <script type="text/javascript">
+    document.getElementById("submit").addEventListener("click", displayMessage);
+
+    function displayMessage() {
+      console.log("I HATE JS!!!");
+    }
+
+  </script>
 </div>
 <div id="directions-panel"></div>
 </div>
@@ -67,6 +64,42 @@
       }
     }
 
+  function gMilestone(route,dist,opts) {
+
+    var markers=[],
+        geo=google.maps.geometry.spherical,
+        path=route.overview_path,
+        point=path[0],
+        distance=0,
+        leg,
+        overflow,
+        pos;
+
+    for(var p=1;p<path.length;++p) {
+      leg=Math.round(geo.computeDistanceBetween(point,path[p]));
+      d1=distance+0
+      distance+=leg;
+      overflow=dist-(d1%dist);
+
+      if(distance>=dist && leg>=overflow) {
+        if(overflow && leg>=overflow) {
+          pos=geo.computeOffset(point,overflow,geo.computeHeading(point,path[p]));
+          opts.position=pos;
+          markers.push(new google.maps.Marker(opts));
+          distance-=dist;
+        }
+
+        while(distance>=dist) {
+          pos=geo.computeOffset(point,dist+overflow,geo.computeHeading(point,path[p]));
+          opts.position=pos;
+          markers.push(new google.maps.Marker(opts));
+          distance-=dist;
+        }
+      }
+      point=path[p]
+    }
+  return markers;
+}
     directionsService.route({
       origin: document.getElementById('start').value,
       destination: document.getElementById('end').value,
