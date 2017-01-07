@@ -6,35 +6,12 @@
 <br>
 <b>End:</b></br>
 <input id="end" type="text" placeholder="Cheyenne, WY" />
-
-<b>Intervals you need fuel:</b></br>
-<input id="interval" type="text" placeholder="200 miles" />
-
-
-
-<h4><%= link_to "Or Create a New Place", new_user_place_path  %></h4>
-
-<h3><%= link_to "Fetch Fuel Stations", user_fuel_stations_path(@user) %></h3>
-
-  <b>Waypoints:</b> <br>
-  <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br>
-  <select multiple id="waypoints">
-
-      <option value= <%=station.address%></option>
-    <% end %>
-  </select>
-  <br>
-
 <br>
-  <input type="submit" id="submit">
-  <!-- <script type="text/javascript">
-    document.getElementById("submit").addEventListener("click", displayMessage);
-
-    function displayMessage() {
-      alert("I HATE JS!!!");
-    }
-
-  </script> -->
+<b>Intervals you need fuel(in miles):</b></br>
+<input id="interval" type="text" placeholder="200 miles" />
+<br>
+<input type="submit" id="submit">
+<br>
 </div>
 <div id="directions-panel"></div>
 </div>
@@ -45,7 +22,7 @@
     var directionsDisplay = new google.maps.DirectionsRenderer;
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 6,
-      center: {lat: 41.85, lng: -87.65}
+      center: {lat: 39.73, lng: -104.99}
     });
     directionsDisplay.setMap(map);
 
@@ -55,23 +32,9 @@
   }
 
   function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-    var waypts = [];
-    var checkboxArray = document.getElementById('waypoints');
-    for (var i = 0; i < checkboxArray.length; i++) {
-      if (checkboxArray.options[i].selected) {
-        waypts.push({
-          location: checkboxArray[i].value,
-          stopover: true
-        });
-      }
-    }
-
-
     directionsService.route({
       origin: document.getElementById('start').value,
       destination: document.getElementById('end').value,
-
-      waypoints: waypts,
       optimizeWaypoints: true,
       travelMode: 'DRIVING'
     }, function(response, status) {
@@ -80,7 +43,6 @@
         var route = response.routes[0];
         var summaryPanel = document.getElementById('directions-panel');
         summaryPanel.innerHTML = '';
-        // For each route, display summary information.
         for (var i = 0; i < route.legs.length; i++) {
           var routeSegment = i + 1;
           summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
@@ -92,29 +54,59 @@
       } else {
         window.alert('Directions request failed due to ' + status);
       }
-        var interval = document.getElementById('interval').value*1609.34
-        var allLegs = directionsDisplay.directions.routes[0].overview_path
-        var legDistance = 0
-        var legDistances = []
-        for (var i = 0; i < (allLegs.length - 1); i++) {
-          var distance = google.maps.geometry.spherical.computeDistanceBetween(allLegs[i], allLegs[i+1])
-          legDistance += distance
-          if (legDistance >= interval) {
-            legDistances.push(allLegs[i+1])
-            legDistance = 0
+
+        var interval = document.getElementById('interval').value*1609.34;
+        var allLegs = directionsDisplay.directions.routes[0].overview_path;
+        var legDistance = 0;
+        var legDistances = [];
+        function computeLegDistance(){
+          for (var i = 0; i < allLegs.length - 1; i++) {
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(allLegs[i], allLegs[i+1]);
+            legDistance += distance
+            if (legDistance >= interval) {
+              legDistances.push(allLegs[i+1]);
+              legDistance = 0;
+            }
           }
         }
-        debugger;
-
+      computeLegDistance();
+      buildMapWithWaypts(legDistances);
     });
 
+    function buildMapWithWaypts(waypts) {
+      var formattedWaypts = [];
 
+      for (var i = 0; i < waypts.length - 1; i++) {
+        formattedWaypts.push({location: waypts[i], stopover: true})
+      }
 
-
-
+      directionsService.route({
+        origin: document.getElementById('start').value,
+        destination: document.getElementById('end').value,
+        waypoints: formattedWaypts,
+        optimizeWaypoints: true,
+        travelMode: 'DRIVING'
+      }, function(response, status) {
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+          var route = response.routes[0];
+          var summaryPanel = document.getElementById('directions-panel');
+          summaryPanel.innerHTML = '';
+          for (var i = 0; i < route.legs.length; i++) {
+            var routeSegment = i + 1;
+            summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+                '</b><br>';
+            summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+            summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+            summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+          }
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    }
   }
 </script>
-
 
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['google_key'] %>&callback=initMap&libraries=geometry">

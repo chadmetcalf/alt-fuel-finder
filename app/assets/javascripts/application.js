@@ -15,5 +15,4 @@
 //= require turbolinks
 //= require bootstrap
 //= require underscore
-//= require epoly
 //= require_tree .
