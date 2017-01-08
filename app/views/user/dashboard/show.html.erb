@@ -1,9 +1,3 @@
-<% if current_user  %>
-  <h3>Welcome, <%= "#{current_user.first_name} #{current_user.last_name}" %></h3>
-  <%= link_to "Logout", logout_path %>
-<% else %>
-  <%= link_to "Sign in with Google", "/auth/google" %>
-<% end %>
 
 <div id="map"></div>
 <div id="right-panel"><div>
@@ -17,7 +11,7 @@
 <b>Intervals you need fuel(in miles):</b></br>
 <input id="interval" type="text" placeholder="200 miles" />
 <br>
-<input type="submit" id="submit">
+<input type="submit" id="submit" class="btn-success">
 <br>
 </div>
 <div id="directions-panel"></div>
