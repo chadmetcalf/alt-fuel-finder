@@ -11,4 +11,10 @@ Rails.application.routes.draw do
     get 'fuel_stations/:id', to: "dashboard#fuel_stations", as: :fuel_stations
     resources :places, only: [:new, :create]
   end
+
+  namespace :api, defaults: {format: :json} do
+    namespace :v1 do
+      resources :fuel_stations, only: [:index]
+    end
+  end
 end
