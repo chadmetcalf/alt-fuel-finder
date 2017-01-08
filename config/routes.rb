@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index]
   namespace :user do
-    get "users/:id", to: "dashboard#show", as: :dashboard
+    get "/dashboard", to: "dashboard#show", as: :dashboard
     get 'fuel_stations/:id', to: "dashboard#fuel_stations", as: :fuel_stations
     resources :places, only: [:new, :create]
   end
