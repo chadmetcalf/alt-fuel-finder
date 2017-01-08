@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   # resources :users, only:[:show]
   root "home#index"
   get 'auth/:provider/callback',  to: 'sessions#create'
+  get 'logout',                   to: 'sessions#destroy'
+
 
   resources :users, only: [:index]
   namespace :user do
