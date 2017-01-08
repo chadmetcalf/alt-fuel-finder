@@ -28,6 +28,8 @@ gem 'faraday'
 gem 'sprockets', '>= 3.0.0'
 gem 'sprockets-es6'
 gem 'geocoder'
+gem 'omniauth-google-oauth2'
+
 # gem 'gmaps4rails'
 
 # Use Redis adapter to run Action Cable in production
