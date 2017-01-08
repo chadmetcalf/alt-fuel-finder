@@ -21,3 +21,6 @@
 
 # Ignore vcr cassettes
 /spec/vcr_cassettes
+
+# Ignore keys for production
+/config/initializers/keys.rb
