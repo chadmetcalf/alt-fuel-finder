@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
-  get 'home/index'
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
+  # resources :users, only:[:show]
   root "home#index"
+  get 'auth/:provider/callback',  to: 'sessions#create'
+  get 'logout',                   to: 'sessions#destroy'
+
+
+  resources :users, only: [:index]
+  namespace :user do
+    get "users/:id", to: "dashboard#show", as: :dashboard
+    get 'fuel_stations/:id', to: "dashboard#fuel_stations", as: :fuel_stations
+    resources :places, only: [:new, :create]
+  end
 end
