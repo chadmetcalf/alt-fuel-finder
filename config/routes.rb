@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # resources :users, only:[:show]
   root "home#index"
+  get 'auth/:provider/callback',  to: 'sessions#create'
 
   resources :users, only: [:index]
   namespace :user do
