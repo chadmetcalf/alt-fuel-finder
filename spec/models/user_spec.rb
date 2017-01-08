@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
       provider: "google",
       uid: "123",
       info: {
-        email: "alishersadikov@mgail.com",
+        email: "alishersadikov@gmail.com",
         first_name: "Alisher",
         last_name: "Sadikov"
       },
