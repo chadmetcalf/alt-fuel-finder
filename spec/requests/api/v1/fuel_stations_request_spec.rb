@@ -7,10 +7,9 @@ describe "fuel stations endpoints" do
       get "/api/v1/fuel_stations?lat=39.7392&lng=-104.9903&fuel_type=E85"
 
       result = JSON.parse(response.body)
-
+      
       expect(response).to be_success
-      expect(response).to be(Array)
-      expect(response.count).to eq(14)
+      expect(result.count).to eq(14)
     end
   end
 end

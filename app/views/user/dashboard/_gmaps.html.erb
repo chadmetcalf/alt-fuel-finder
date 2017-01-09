@@ -52,14 +52,16 @@
           }
         }
       computeLegDistance();
+      fetchAllStations(legDistances);
       buildMapWithWaypts(legDistances);
     });
 
     function buildMapWithWaypts(waypts) {
+      console.log(waypts);
       var formattedWaypts = [];
 
       for (var i = 0; i < waypts.length - 1; i++) {
-        formattedWaypts.push({location: waypts[i], stopover: true})
+        formattedWaypts.push({location: waypts[i], stopover: true});
       }
 
       directionsService.route({
@@ -86,5 +88,30 @@
         }
       });
     }
+  }
+
+  function fetchStations(params) {
+    return $.ajax({
+      url: '/api/v1/fuel_stations?' + params,
+      method: 'GET',
+    }).done(function(data){
+      console.log(data);
+    }).fail(function(error){
+      console.error(err);
+    });
+  };
+
+  function fetchAllStations(coordinates){
+    var allStations = "";
+    var fuel = document.getElementById('fuel-type').value;
+    for (var i = 0; i < coordinates.length; i++) {
+
+      var lat = coordinates[i].lat();
+      var lng = coordinates[i].lng();
+      var coords = "coords" + i;
+      allStations = allStations.concat(coords + "=" + lat + "," + lng + "&");
+    }
+    var params = allStations + "fuel_type=" + fuel;
+    fetchStations(params);
   }
 </script>
