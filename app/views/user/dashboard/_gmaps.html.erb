@@ -53,15 +53,16 @@
         }
       computeLegDistance();
       fetchAllStations(legDistances);
-      buildMapWithWaypts(legDistances);
     });
 
     function buildMapWithWaypts(waypts) {
       console.log(waypts);
       var formattedWaypts = [];
 
-      for (var i = 0; i < waypts.length - 1; i++) {
-        formattedWaypts.push({location: waypts[i], stopover: true});
+      for (var i = 0; i < waypts.length; i++) {
+        for (var j = 0; j < waypts[i].length; j++) {
+          formattedWaypts.push({location: { lat: waypts[i][j].latitude, lng: waypts[i][j].longitude }, stopover: true});
+        }
       }
 
       directionsService.route({
@@ -88,30 +89,32 @@
         }
       });
     }
-  }
 
-  function fetchStations(params) {
-    return $.ajax({
-      url: '/api/v1/fuel_stations?' + params,
-      method: 'GET',
-    }).done(function(data){
-      console.log(data);
-    }).fail(function(error){
-      console.error(err);
-    });
-  };
+    function fetchStations(params) {
+      $.ajax({
+        url: '/api/v1/fuel_stations?' + params,
+        method: 'GET',
+      }).done(function(data){
+        console.log(data);
+        buildMapWithWaypts(data);
+      }).fail(function(error){
+        console.error(err);
+      });
+    };
 
-  function fetchAllStations(coordinates){
-    var allStations = "";
-    var fuel = document.getElementById('fuel-type').value;
-    for (var i = 0; i < coordinates.length; i++) {
+    function fetchAllStations(coordinates){
+      var allStations = "";
+      var fuel = document.getElementById('fuel-type').value;
+      for (var i = 0; i < coordinates.length; i++) {
 
-      var lat = coordinates[i].lat();
-      var lng = coordinates[i].lng();
-      var coords = "coords" + i;
-      allStations = allStations.concat(coords + "=" + lat + "," + lng + "&");
+        var lat = coordinates[i].lat();
+        var lng = coordinates[i].lng();
+        var coords = "coords" + i;
+        allStations = allStations.concat(coords + "=" + lat + "," + lng + "&");
+      }
+      var params = allStations + "fuel_type=" + fuel;
+      fetchStations(params);
     }
-    var params = allStations + "fuel_type=" + fuel;
-    fetchStations(params);
   }
+
 </script>
