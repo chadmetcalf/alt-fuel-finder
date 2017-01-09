@@ -10,7 +10,7 @@
           Welcome, <%= "#{current_user.first_name} #{current_user.last_name}!" %>
         </div>
         <div class="nav navbar-collapse navbar-right">
-            <%= link_to "Logout", logout_path %>
+            <%= button_to "Logout", logout_path %>
           <% else %>
             <%= link_to "Sign in with Google", "/auth/google" %>
           <% end %>

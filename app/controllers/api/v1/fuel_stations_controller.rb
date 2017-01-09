@@ -11,4 +11,10 @@ class Api::V1::FuelStationsController < ApplicationController
     end
     render json: fuel_stations
   end
+
+  private
+
+    def method_name
+
+    end
 end
