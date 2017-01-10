@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: {format: :json} do
-    namespace :v1 dox
+    namespace :v1 do
       resources :fuel_stations, only: [:index]
     end
   end
