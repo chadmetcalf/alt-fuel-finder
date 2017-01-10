@@ -3,8 +3,9 @@ class User::DashboardController < ApplicationController
 
   end
 
-  def fuel_stations
+  def index
 
-    NrelService.new
   end
+
+
 end
