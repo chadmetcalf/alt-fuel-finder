@@ -84,7 +84,7 @@
           formattedStations.push({location: { lat: stations[i][j].latitude, lng: stations[i][j].longitude }, stopover: true});
         }
       }
-
+      debugger;
       directionsService.route({
         origin: document.getElementById('start').value,
         destination: document.getElementById('end').value,
@@ -117,7 +117,6 @@
         url: '/api/v1/fuel_stations?' + params,
         method: 'GET',
       }).done(function(data){
-        console.log(data);
         buildMapWithWaypts(data);
       }).fail(function(error){
         console.error(err);
