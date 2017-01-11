@@ -1,0 +1,3 @@
+random: false
+show_console_log: false
+stop_spec_on_expectation_failure: false
