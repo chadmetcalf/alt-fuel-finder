@@ -5,13 +5,22 @@
 }
 
 .brand-pic {
+  padding-bottom: 10px;
   position: relative;
-  width: 25px;
-  padding-bottom: 15px;
+  width: 30px;
 }
 
 .navbar-welcome {
   font-size: 1.5em;
   color: black;
   padding-left: 20px;
+  color: #d6b033;
+}
+
+.navbar.navbar-default.navbar-inverse div a {
+  color: #d6b033;
+}
+
+.navbar.navbar-default.navbar-inverse div span {
+  color: #d6b033;
 }
