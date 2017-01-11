@@ -1,0 +1,35 @@
+<div id="map"></div>
+<div id="right-panel">
+  <div>
+    <b>Start:</b></br>
+    <input id="start" type="text" placeholder="like Denver, CO" /></br>
+
+    <b>End:</b></br>
+    <input id="end" type="text" placeholder="like Boston, MA" /></br>
+
+    <b>Fuel stop intervals(in miles):</b></br>
+    <input id="interval" type="text" placeholder="like 200" /></br>
+
+    <b>Select fuel type:</b>
+    <select id="fuel-type">
+      <option value="BD">Biodiesel (B20 and above)</option>
+      <option value="CNG">Compressed Natural Gas</option>
+      <option value="E85">Ethanol (E85)</option>
+      <option value="ELEC">Electric</option>
+      <option value="HY">Hydrogen</option>
+      <option value="LNG">Liquefied Natural Gas</option>
+      <option value="LPG">Liquefied Petroleum Gas (Propane)</option>
+      <option value="all">Include all fuel types</option>
+    </select>
+
+    <input type="submit" id="submit" class="btn-success"></br>
+  </div>
+  <br>Route Segments:
+  <div id="directions-panel"></div>
+</div>
+
+<%= render 'gmaps' %>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GMAPS_KEY'] %>&callback=initMap&libraries=geometry">
+</script>

@@ -6,6 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Destination.create!(address: "Denver CO", description: "great city", title: "Mile High")
-Destination.create!(address: "Colorado Srpings CO", description: "awesome city", title: "springs")
-Destination.create!(address: "Fort Collins CO", description: "northern city", title: "FortC")
+user = User.create!(name: "Alisher", username: "alisher", email: "al@al.com", password: "password", password_confirmation: "password")
+# itinerary = Itinerary.create!(user_id: user.id)
+Place.create!(address: "Denver, CO", description: "great city", title: "Mile High", user_id: user.id)
+Place.create!(address: "Albuqurque, NM", description: "nice city", title: "springs", user_id: user.id)
+# Destination.create!(address: "Kansas City, MO", description: "northern city", title: "FortC")

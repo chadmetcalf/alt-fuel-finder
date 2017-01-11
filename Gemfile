@@ -22,13 +22,16 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.2.0'
 gem 'figaro'
 gem 'faraday'
 gem 'sprockets', '>= 3.0.0'
 gem 'sprockets-es6'
 gem 'geocoder'
-gem 'gmaps4rails'
+gem 'omniauth-google-oauth2'
+gem 'autoprefixer-rails'
+
+# gem 'gmaps4rails'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
