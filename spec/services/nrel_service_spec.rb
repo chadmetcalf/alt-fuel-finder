@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-describe "fuel stations endpoints" do
-  context "GET /fuel_stations" do
-    it "returns an electric fuel station for every 200 mile interval between Denver and Boston" do
-      VCR.use_cassette("internal_api") do
+describe "nrel service" do
+  context "#fetch_stations" do
+    it "returns a fuel station for each coordinate and fuel type" do
+      VCR.use_cassette("nrel_service") do
 
         params = {
           "latLng0"=>"41.11496,-101.71232", "latLng1"=>"40.821110000000004,-97.63129",
@@ -14,11 +14,8 @@ describe "fuel stations endpoints" do
           "latLng8"=>"42.191500000000005,-71.85867", "fuel_type"=>"ELEC"
         }
 
-        get "/api/v1/fuel_stations?", params
+        result = NrelService.new.fetch_stations(params)
 
-        result = JSON.parse(response.body, symbolize_names: true)
-
-        expect(response).to be_success
         expect(result.class).to eq(Array)
         expect(result.count).to eq(9)
 
