@@ -1,7 +1,7 @@
 require('../app/assets/javascripts/gmaps')
 
-describe('fetchStations' function() {
+describe('formatStations' function() {
   it('fetches stations for given coordinates', function () {
-
+    
   });
 });
