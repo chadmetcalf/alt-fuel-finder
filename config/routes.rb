@@ -7,8 +7,14 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index]
   namespace :user do
-    get "users/:id", to: "dashboard#show", as: :dashboard
-    get 'fuel_stations/:id', to: "dashboard#fuel_stations", as: :fuel_stations
+    get "/dashboard", to: "dashboard#show"
+    get "index", to: "dashboard#index"
     resources :places, only: [:new, :create]
+  end
+
+  namespace :api, defaults: {format: :json} do
+    namespace :v1 do
+      resources :fuel_stations, only: [:index]
+    end
   end
 end

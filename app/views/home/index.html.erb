@@ -1,1 +1,43 @@
-<h1><%= link_to "Sign in with Google", "/auth/google" %></h1>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Welcome to AltFuelFinder!</h1>
+    <p class="lead">
+      Do you operate a vehicle or a fleet of vehicles that use(s) alternative
+      fuels? And do you find it hard to plan your trips, especially looking
+      up the fuel stations along your route? Well, you have found the solution!  </p>
+  </div>
+
+  <div class="row marketing">
+    <div class="col-lg-6">
+      <h2>Google Maps</h2>
+      <p>AltFuelFinder relies on Google Maps since it is the most accurate mapping/routing tool out there.</p>
+
+      <h2>Interval</h2>
+      <p>You will enter the intervals at which you need fuel and the nearest stations will be added to your route.</p>
+
+      <h2>Fuel Type</h2>
+      <p>You will specify the fuel type. Currently we support: Biodiesel, CNG, E85, Electric, Hydorgen, LNG, LPG.</p>
+    </div>
+
+    <div class="col-lg-6">
+      <h2>NREL API</h2>
+      <p>The fuel stations are fetched from NREL API, which has the most accurate and comprehensive database of alternative fuel stations. For more info click <a href="http://www.nrel.gov/">NREL</a></p>
+
+      <h2>Google Authentication</h2>
+      <p>You will just sign in with your google credentials, at the top.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2017 Alisher Sadikov</p>
+  </footer>
+
+</div> <!-- /container -->
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  <style>
+    body {
+        background-image: url("assets/map.jpg");
+    }
+  </style>
