@@ -2,12 +2,12 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <%= link_to image_tag("alt-fuel.png", alt: "logo", class: "brand-pic"), root_path, class: "navbar-brand" %>
-      <%= link_to "AltFuelFindr", root_path, class: "navbar-brand" %>
+      <%= link_to "AltFuelFinder", root_path, class: "navbar-brand" %>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <span class="nav navbar-nav navbar-left navbar-brand navbar-welcome">
         <% if current_user %>
-          Welcome, <%= "#{current_user.first_name} #{current_user.last_name}!" %>
+          Signed in as <%= "#{current_user.first_name} #{current_user.last_name}" %>
         </span>
         <span class="nav navbar-collapse navbar-right">
           <h4><%= link_to "Logout", logout_path %></h4>
