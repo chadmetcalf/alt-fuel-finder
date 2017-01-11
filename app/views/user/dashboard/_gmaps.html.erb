@@ -102,8 +102,8 @@
 
         var lat = coordinates[i].lat();
         var lng = coordinates[i].lng();
-        var coords = "coords" + i;
-        allStations = allStations.concat(coords + "=" + lat + "," + lng + "&");
+        var latLng = "latLng" + i;
+        allStations = allStations.concat(latLng + "=" + lat + "," + lng + "&");
       }
       var params = allStations + "fuel_type=" + fuel;
       fetchStations(params);
