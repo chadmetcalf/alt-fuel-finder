@@ -30,6 +30,9 @@ gem 'sprockets-es6'
 gem 'geocoder'
 gem 'omniauth-google-oauth2'
 gem 'autoprefixer-rails'
+gem 'simplecov'
+gem 'newrelic_rpm'
+
 
 # gem 'gmaps4rails'
 

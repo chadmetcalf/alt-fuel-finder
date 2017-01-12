@@ -8,6 +8,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'vcr'
+SimpleCov.start("rails")
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/vcr_cassettes"
