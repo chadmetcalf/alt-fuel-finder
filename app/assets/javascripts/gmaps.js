@@ -36,7 +36,7 @@
   }
 
   function computeInterimCoordinates(allLegs){
-    var interval = document.getElementById('interval').value*1609.34;
+    var interval = (document.getElementById('interval').value - 20)*1609.34;
     var legDistance = 0;
     var coordinates = [];
 
@@ -70,7 +70,6 @@
         var summaryPanel = document.getElementById('directions-panel');
         summaryPanel.innerHTML = '';
         for (var i = 0; i < route.legs.length; i++) {
-          debugger;
           summaryPanel.innerHTML += '<b>Stop ' + (i + 1) + ': ' + stations[i].station_name +
           '</b><br>';
           summaryPanel.innerHTML += 'Address: ' + route.legs[i].end_address + '<br>';
