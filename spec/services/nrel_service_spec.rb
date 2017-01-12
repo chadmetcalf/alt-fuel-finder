@@ -19,11 +19,11 @@ describe "nrel service" do
         expect(result.class).to eq(Array)
         expect(result.count).to eq(9)
 
-        expect(result.first[:id]).to eq(33279)
-        expect(result.first[:station_name]).to eq("Western Convenience Store")
+        expect(result.first[:id]).to eq(51672)
+        expect(result.first[:station_name]).to eq("OGALLALA")
         expect(result.first[:access_days_time]).to eq("24 hours daily")
-        expect(result.first[:latitude]).to eq(41.1250917)
-        expect(result.first[:longitude]).to eq(-101.7160397)
+        expect(result.first[:latitude]).to eq(41.1257932)
+        expect(result.first[:longitude]).to eq(-101.715413)
 
         expect(result.last[:id]).to eq(45875)
         expect(result.last[:station_name]).to eq("Bertera Nissan")

@@ -1,5 +1,6 @@
 <div id="map"></div>
 <div id="right-panel">
+
   <div>
     <b>Start:</b></br>
     <input id="start" type="text" placeholder="like Denver, CO" /></br>
@@ -28,14 +29,7 @@
   <div id="directions-panel"></div>
 </div>
 
-<%= render 'gmaps' %>
 
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GMAPS_KEY'] %>&callback=initMap&libraries=geometry">
 </script>
-
-<style>
-  body {
-      background-image: url("assets/map.jpg");
-  }
-</style>

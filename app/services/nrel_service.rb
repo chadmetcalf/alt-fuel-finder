@@ -29,7 +29,7 @@ class NrelService
         req.params["api_key"] = ENV['NREL_KEY']
         req.params["latitude"] = lat_long.split(",")[0]
         req.params["longitude"] = lat_long.split(",")[1]
-        req.params["fuel"] = fuel_type
+        req.params["fuel_type"] = fuel_type
         req.params["radius"] = 30
         req.params["limit"] = 1
       end

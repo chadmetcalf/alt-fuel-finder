@@ -54,6 +54,7 @@
 
   function buildMapWithWaypts(stations, directionsService, directionsDisplay) {
 
+    stations = filterStations(stations);
     formattedStations = formatStations(stations);
 
     directionsService.route({
@@ -69,12 +70,11 @@
         var summaryPanel = document.getElementById('directions-panel');
         summaryPanel.innerHTML = '';
         for (var i = 0; i < route.legs.length; i++) {
-          var routeSegment = i + 1;
-          summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+          debugger;
+          summaryPanel.innerHTML += '<b>Stop ' + (i + 1) + ': ' + stations[i].station_name +
           '</b><br>';
-          summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
-          summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-          summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+          summaryPanel.innerHTML += 'Address: ' + route.legs[i].end_address + '<br>';
+          summaryPanel.innerHTML += 'Distance: ' + route.legs[i].distance.text + '<br><br>';
         }
       } else {
         window.alert('Directions request failed due to ' + status);
@@ -82,12 +82,25 @@
     });
   };
 
+  function filterStations(stations) {
+    filteredStations = [];
+    for (var i = 0; i < stations.length; i++) {
+      if (stations[i] != null || stations[i] != undefined) {
+        filteredStations.push(stations[i]);
+      }
+    }
+    return filteredStations;
+  }
+
   function formatStations(stations) {
+
+    filteredStations = filterStations(stations);
+
     var formattedStations = [];
 
-    for (var i = 0; i < stations.length; i++) {
+    for (var i = 0; i < filteredStations.length; i++) {
       formattedStations.push(
-        {location: { lat: stations[i].latitude, lng: stations[i].longitude },
+        {location: { lat: filteredStations[i].latitude, lng: filteredStations[i].longitude },
         stopover: true}
       );
     }

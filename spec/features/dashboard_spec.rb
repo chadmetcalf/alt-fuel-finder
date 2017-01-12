@@ -12,6 +12,5 @@ describe "dashboard page" do
     find("#fuel-type").find("option[value='ELEC']").select_option
     click_button "submit"
 
-    save_and_open_page
   end
 end
