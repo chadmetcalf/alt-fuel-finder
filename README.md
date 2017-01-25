@@ -1,24 +1,15 @@
-# README
+##AltFuelFinder
+This is a Rails application that allow you to find fuel stations along your route. 
+Some features: 
+###Google Maps
+AltFuelFinder relies on Google Maps since it is the most accurate mapping/routing tool out there.
+###Interval
+You will enter the intervals at which you need fuel and the nearest stations will be added to your route.
+###Fuel Type
+You will specify the fuel type. Currently we support: Biodiesel, CNG, E85, Electric, Hydorgen, LNG, LPG.
+##NREL API
+The fuel stations are fetched from NREL API, which has the most accurate and comprehensive database of alternative fuel stations. For more info click [NREL](https://developer.nrel.gov/).
+###Google Authentication
+You will just sign in with your google credentials, at the top.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+URL: https://altfuelfinder.herokuapp.com/
