@@ -1,5 +1,5 @@
 ##AltFuelFinder
-This is a Rails application that allow you to find fuel stations along your route. 
+This is a Rails application that allows you to find fuel stations along your route. 
 
 Some features: 
 ###Google Maps
