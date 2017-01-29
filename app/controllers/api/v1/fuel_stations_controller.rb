@@ -1,5 +1,6 @@
 class Api::V1::FuelStationsController < ApplicationController
   def index
-    render json: NrelService.new.fetch_stations(params)
-  end
+    nrel_service = NrelService.new(params: params)
+
+    render json: nrel_service.stations
 end
